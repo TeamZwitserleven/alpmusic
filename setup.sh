@@ -18,6 +18,8 @@ if [ -z "${MPG123}" ]; then
     MPG123=$(which mpg123)
 fi
 
+h3consumption -m 800 -u off
+
 adduser --gecos $PIUSER --disabled-login $PIUSER --uid 1000
 chown -R 1000:1000 /home/$PIUSER 
 echo "$PIUSER:$PIPASSWORD" | chpasswd 
@@ -64,3 +66,4 @@ chown -R 1000:1000 /home/$PIUSER
 systemctl daemon-reload
 systemctl enable music-player.service
 systemctl restart music-player.service
+
