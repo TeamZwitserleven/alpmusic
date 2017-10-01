@@ -32,7 +32,7 @@ cat > "/etc/systemd/system/music-player.service" <<EOF
 Description=Play music 
 
 [Service]
-ExecStart=/usr/bin/mpg123 -Z /music/*
+ExecStart=/bin/sh -c "mpg123 -Z /music/*.mp3"
 
 [Install]
 WantedBy=multi-user.target
