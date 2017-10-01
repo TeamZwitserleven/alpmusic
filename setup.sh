@@ -13,6 +13,7 @@ fi
 
 MPG123=$(which mpg123)
 if [ -z "${MSG123}" ]; then
+    apt-get update
     apt-get -y install mpg123
     MPG123=$(which mpg123)
 fi
@@ -20,7 +21,7 @@ fi
 adduser --gecos $PIUSER --disabled-login $PIUSER --uid 1000
 chown -R 1000:1000 /home/$PIUSER 
 echo "$PIUSER:$PIPASSWORD" | chpasswd 
-usermod -a -G sudo,adm,input,video,plugdev $DEBUSER
+usermod -a -G sudo,adm,input,video,plugdev $PIUSER
 
 mkdir -p /music 
 cp -Rf music/*.mp3 /music/
