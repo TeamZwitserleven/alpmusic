@@ -37,9 +37,9 @@ cat > "/etc/systemd/system/music-player.service" <<EOF
 Description=Play music 
 
 [Service]
-ExecStartPre=/bin/sh -c "echo 11 > /sys/class/gpio/export"
+ExecStartPre=/bin/sh -c "test -e /sys/class/gpio/gpio11/direction || echo 11 > /sys/class/gpio/export"
 ExecStartPre=/bin/sh -c "echo in > /sys/class/gpio/gpio11/direction"
-ExecStartPre=/bin/sh -c "echo 12 > /sys/class/gpio/export"
+ExecStartPre=/bin/sh -c "test -e /sys/class/gpio/gpio12/direction || echo 12 > /sys/class/gpio/export"
 ExecStartPre=/bin/sh -c "echo in > /sys/class/gpio/gpio12/direction"
 ExecStart=/opt/alpmusic/alpmusic -music=/music/
 
