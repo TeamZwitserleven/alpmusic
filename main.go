@@ -44,14 +44,18 @@ func main() {
 			if cmd == nil {
 				log.Println("starting playing music")
 				cmd = exec.Command("mpg123", "-Z", filepath.Join(musicDir, "*.mp3"))
-				cmd.Start()
-				log.Println("started playing music")
+				if err := cmd.Start(); err != nil {
+					log.Printf("Playing music failed: %#v\n", err)
+				} else {
+					log.Println("started playing music")
+				}
 			}
 		} else {
 			if cmd != nil {
 				log.Println("stopping playing music")
 				if p := cmd.Process; p != nil {
 					p.Signal(syscall.SIGKILL)
+					cmd.Wait()
 				}
 				cmd = nil
 				log.Println("stopped playing music")

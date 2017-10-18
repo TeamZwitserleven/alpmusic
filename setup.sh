@@ -30,14 +30,13 @@ cp -Rf music/*.mp3 /music/
 chown -R 1000:1000 /music 
 
 mkdir -p /opt/alpmusic 
-cp alpmusic /opt/alpmusic/
+cp -f alpmusic /opt/alpmusic/
 
 cat > "/etc/systemd/system/music-player.service" <<EOF
 [Unit]
 Description=Play music 
 
 [Service]
-User=${PIUSER}
 ExecStartPre=/bin/sh -c "echo 11 > /sys/class/gpio/export"
 ExecStartPre=/bin/sh -c "echo in > /sys/class/gpio/gpio11/direction"
 ExecStartPre=/bin/sh -c "echo 12 > /sys/class/gpio/export"
@@ -48,7 +47,7 @@ ExecStart=/opt/alpmusic/alpmusic -music=/music/
 WantedBy=multi-user.target
 EOF
 
-cat > "/home/$PIUSER/.asoundrc" <<EOF
+cat > "/root/.asoundrc" <<EOF
 pcm.!default {
  type asym
  capture.pcm "mic"
