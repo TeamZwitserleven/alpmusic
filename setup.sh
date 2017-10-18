@@ -54,14 +54,13 @@ Description=Play music
 After=music-gpio.service
 
 [Service]
-User=${PIUSER}
 ExecStart=/opt/alpmusic/alpmusic -music=/music/
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-cat > "/home/$PIUSER/.asoundrc" <<EOF
+cat > "/root/.asoundrc" <<EOF
 pcm.!default {
  type asym
  capture.pcm "mic"
