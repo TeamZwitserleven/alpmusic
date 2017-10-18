@@ -76,7 +76,7 @@ func readPin(pinFile string) bool {
 	if err != nil {
 		log.Fatalf("Failed to read pin %s: %#v\n", pinFile, err)
 	}
-	return string(content) == "1"
+	return strings.TrimSpace(string(content)) == "1"
 }
 
 func getMusicFiles(dir string) []string {
