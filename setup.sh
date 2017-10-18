@@ -33,22 +33,35 @@ chown -R 1000:1000 /music
 mkdir -p /opt/alpmusic 
 cp -f alpmusic /opt/alpmusic/
 
-cat > "/etc/systemd/system/music-player.service" <<EOF
+cat > "/etc/systemd/system/music-gpio.service" <<EOF
 [Unit]
-Description=Play music 
+Description=Prepare gpio for music player
 
 [Service]
+Type=oneshot
 ExecStartPre=/bin/sh -c "test -e /sys/class/gpio/gpio11/direction || echo 11 > /sys/class/gpio/export"
 ExecStartPre=/bin/sh -c "echo in > /sys/class/gpio/gpio11/direction"
 ExecStartPre=/bin/sh -c "test -e /sys/class/gpio/gpio12/direction || echo 12 > /sys/class/gpio/export"
-ExecStartPre=/bin/sh -c "echo in > /sys/class/gpio/gpio12/direction"
+ExecStart=/bin/sh -c "echo in > /sys/class/gpio/gpio12/direction"
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+cat > "/etc/systemd/system/music-player.service" <<EOF
+[Unit]
+Description=Play music 
+After=music-gpio.service
+
+[Service]
+User=${PIUSER}
 ExecStart=/opt/alpmusic/alpmusic -music=/music/
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-cat > "/root/.asoundrc" <<EOF
+cat > "/home/$PIUSER/.asoundrc" <<EOF
 pcm.!default {
  type asym
  capture.pcm "mic"
@@ -71,6 +84,8 @@ EOF
 chown -R 1000:1000 /home/$PIUSER 
 
 systemctl daemon-reload
+systemctl enable music-gpio.service
 systemctl enable music-player.service
+systemctl restart music-gpio.service
 systemctl restart music-player.service
 
