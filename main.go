@@ -43,7 +43,7 @@ func main() {
 		if pin1 {
 			if cmd == nil {
 				log.Println("starting playing music")
-				cmd = exec.Command("mpg123", "-Z", filepath.Join(musicDir, "*.mp3"))
+				cmd = exec.Command("/usr/bin/mpg123", "-Z", filepath.Join(musicDir, "*.mp3"))
 				if err := cmd.Start(); err != nil {
 					log.Printf("Playing music failed: %#v\n", err)
 				} else {
