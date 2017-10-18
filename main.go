@@ -2,11 +2,13 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"syscall"
 	"time"
 )
@@ -42,23 +44,27 @@ func main() {
 
 		if pin1 {
 			if cmd == nil {
-				log.Println("starting playing music")
-				cmd = exec.Command("/usr/bin/mpg123", "-Z", filepath.Join(musicDir, "*.mp3"))
+				fmt.Println("starting playing music")
+				files := getMusicFiles(musicDir)
+				args := append([]string{"-Z"}, files...)
+				cmd = exec.Command("/usr/bin/mpg123", args...)
+				cmd.Stdout = os.Stdout
+				cmd.Stderr = os.Stderr
 				if err := cmd.Start(); err != nil {
-					log.Printf("Playing music failed: %#v\n", err)
+					fmt.Printf("Playing music failed: %#v\n", err)
 				} else {
-					log.Println("started playing music")
+					fmt.Println("started playing music")
 				}
 			}
 		} else {
 			if cmd != nil {
-				log.Println("stopping playing music")
+				fmt.Println("stopping playing music")
 				if p := cmd.Process; p != nil {
 					p.Signal(syscall.SIGKILL)
 					cmd.Wait()
 				}
 				cmd = nil
-				log.Println("stopped playing music")
+				fmt.Println("stopped playing music")
 			}
 		}
 		time.Sleep(time.Second)
@@ -73,10 +79,16 @@ func readPin(pinFile string) bool {
 	return string(content) == "1"
 }
 
-func playMusic() {
-
-}
-
-func stopMusic() {
-
+func getMusicFiles(dir string) []string {
+	entries, err := ioutil.ReadDir(dir)
+	if err != nil {
+		return nil
+	}
+	result := make([]string, 0, len(entries))
+	for _, e := range entries {
+		if strings.HasSuffix(e.Name(), ".mp3") {
+			result = append(result, filepath.Join(dir, e.Name()))
+		}
+	}
+	return result
 }
