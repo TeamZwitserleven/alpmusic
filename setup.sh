@@ -24,6 +24,7 @@ adduser --gecos $PIUSER --disabled-login $PIUSER --uid 1000
 chown -R 1000:1000 /home/$PIUSER 
 echo "$PIUSER:$PIPASSWORD" | chpasswd 
 usermod -a -G sudo,adm,audio,input,video,plugdev $PIUSER
+usermod -a -G sudo,adm,audio,input,video,plugdev root
 
 mkdir -p /music 
 cp -Rf music/*.mp3 /music/
