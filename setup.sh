@@ -29,13 +29,20 @@ mkdir -p /music
 cp -Rf music/*.mp3 /music/
 chown -R 1000:1000 /music 
 
+mkdir -p /opt/alpmusic 
+cp alpmusic /opt/alpmusic/
+
 cat > "/etc/systemd/system/music-player.service" <<EOF
 [Unit]
 Description=Play music 
 
 [Service]
 User=${PIUSER}
-ExecStart=/bin/sh -c "mpg123 -Z /music/*.mp3"
+ExecStartPre=/bin/sh -c "echo 11 > /sys/class/gpio/export"
+ExecStartPre=/bin/sh -c "echo in > /sys/class/gpio/gpio11/direction"
+ExecStartPre=/bin/sh -c "echo 12 > /sys/class/gpio/export"
+ExecStartPre=/bin/sh -c "echo in > /sys/class/gpio/gpio12/direction"
+ExecStart=/opt/alpmusic/alpmusic -music=/music/
 
 [Install]
 WantedBy=multi-user.target

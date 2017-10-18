@@ -15,6 +15,9 @@ Connect the audio jack as follows to 13 pin header:
 - Audio jack 2 -> PIN 7 (LINEOUTR)
 - Audio jack 5 -> PIN 8 (LINEOUTL)
 
+- Loconet pin 1 -> GPIO 11 
+- Loconet pin 2 -> GPIO 12
+
 ## Software Setup 
 
 - Download Armbian `Ubuntu Server Legacy` image from https://www.armbian.com/orange-pi-zero/.
